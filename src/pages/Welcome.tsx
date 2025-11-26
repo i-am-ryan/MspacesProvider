@@ -1,9 +1,19 @@
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
+import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import heroImage from '@/assets/hero-provider.jpg';
 
 const Welcome = () => {
   const navigate = useNavigate();
+  const { isLoaded, isSignedIn } = useUser();
+
+  // Redirect authenticated users to home
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      navigate('/home');
+    }
+  }, [isLoaded, isSignedIn, navigate]);
 
   return (
     <div className="min-h-screen relative flex items-center justify-center p-6">
@@ -13,7 +23,7 @@ const Welcome = () => {
         style={{ backgroundImage: `url(${heroImage})` }}
       />
       <div className="absolute inset-0 bg-primary/85" />
-
+      
       {/* Content */}
       <div className="relative z-10 text-center max-w-md">
         <h1 className="text-5xl font-bold text-white mb-3">
@@ -22,7 +32,7 @@ const Welcome = () => {
         <p className="text-xl text-white/90 mb-12">
           Grow Your Service Business
         </p>
-
+        
         <div className="space-y-3">
           <Button
             size="lg"
@@ -31,6 +41,7 @@ const Welcome = () => {
           >
             Sign Up
           </Button>
+          
           <Button
             size="lg"
             variant="outline"
@@ -39,12 +50,6 @@ const Welcome = () => {
           >
             Sign In
           </Button>
-          <button
-            className="text-white/80 hover:text-white text-sm underline mt-4"
-            onClick={() => navigate('/home')}
-          >
-            Skip for now
-          </button>
         </div>
       </div>
     </div>

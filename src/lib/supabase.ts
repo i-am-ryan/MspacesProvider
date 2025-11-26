@@ -1,6 +1,66 @@
+// LOCATION: /src/lib/supabase.ts (PROVIDER APP)
+// This matches your working client app setup
+
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://mangdjdvtsjovgmclneg.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1hbmdkamR2dHNqb3ZnbWNsbmVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMzA1NTEsImV4cCI6MjA3ODcwNjU1MX0.Kxx0fMR89mNFUjGwu2btRa8aDkP7yS1Xj9OPJFQAuxk';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables');
+}
+
+// Simple client - same as your working client app
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// For admin operations
+export const supabaseAdmin = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false
+  }
+});
+
+// Types
+export type Profile = {
+  id: string;
+  clerk_user_id: string;
+  email: string;
+  full_name: string;
+  phone_number: string | null;
+  user_type: 'customer' | 'provider';
+  avatar_url: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CustomerProfile = {
+  id: string;
+  profile_id: string;
+  address: string | null;
+  city: string | null;
+  province: string | null;
+  postal_code: string | null;
+  formatted_address: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  location: any;
+  preferred_payment_method: string | null;
+};
+
+export type ProviderProfile = {
+  id: string;
+  profile_id: string;
+  business_name: string | null;
+  bio: string | null;
+  years_of_experience: number | null;
+  address: string | null;
+  city: string | null;
+  province: string | null;
+  service_radius_km: number;
+  is_verified: boolean;
+  is_available: boolean;
+  average_rating: number;
+  total_reviews: number;
+  total_jobs_completed: number;
+};
